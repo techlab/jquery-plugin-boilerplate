@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jQuery Gulp Example</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Include Plugin CSS file -->
+    <link href="../src/css/alter_me.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <br />
+    <section class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <p id="element1">Alter me to UpperCase</p> 
+                <p id="element2">Alter me to LowerCase</p>
+            </div>
+        </div>
+    </section>
+    
+    
+    <!-- Include jQuery -->
+    <script src="../node_modules/jquery/dist/jquery.min.js" type="text/javascript"></script>
+    <!-- Include Plugin JS file -->
+    <script src="../src/js/jquery.alterMe.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            // Call Plugin   	
+            $('#element1').alterMe({ theme: 'default', alterType: 'upper'});
+            
+            $('#element2').alterMe({ theme: 'blue', alterType: 'lower'});
+		});
+    </script>
+
+</body>
+</html>
