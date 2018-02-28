@@ -18,3 +18,4 @@
 *.sublime-workspace
 *.sublime-project
 /nbproject/private/
+/refer.txt

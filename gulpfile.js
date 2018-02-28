@@ -58,6 +58,12 @@ gulp.task('clean:css', function () {
     return del([DEST_CSS]);
 });
 
+// WATCH for file changes and rerun the task
+gulp.task('watch', function() {
+    gulp.watch(SRC_JS, ['build:js']);
+    gulp.watch(SRC_CSS, ['build:css']);
+});
+
 // TEST
 gulp.task('test', function (done) {
     new karma.Server({

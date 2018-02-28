@@ -1,9 +1,11 @@
 describe('Plugin Default Init', function() {
     var el, plugin;
-
+    
     beforeEach(function(){
-        el = $('<div id="test-element"></div>');
-        $(document.body).append(el);
+        jasmine.getFixtures().fixturesPath = 'base/test';
+        loadFixtures('test-template.html');
+
+        el = $('#test-element');
         plugin = el.alterMe();
     });
     
