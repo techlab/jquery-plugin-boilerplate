@@ -1,80 +1,156 @@
 // Include the required tools used on tasks
-var gulp = require('gulp'),
-    jshint = require('gulp-jshint'),
-    rename = require('gulp-rename'),
-    uglify = require('gulp-uglify'),
-    babel = require("gulp-babel"),
-    postcss = require('gulp-postcss'),
-    cleanCSS = require('gulp-clean-css'),
-    cssbeautify = require('gulp-cssbeautify'),
-    autoprefixer = require('autoprefixer'),
-    karma = require('karma'),
-    del = require('del');
+var gulp          = require('gulp'),
+    jshint        = require('gulp-jshint'),
+    rename        = require('gulp-rename'),
+    uglify        = require('gulp-uglify'),
+    saveLicense   = require('uglify-save-license'),
+    babel         = require("gulp-babel"),
+    postcss       = require('gulp-postcss'),
+    cleanCSS      = require('gulp-clean-css'),
+    cssbeautify   = require('gulp-cssbeautify'),
+    autoprefixer  = require('autoprefixer'),
+    sass          = require('gulp-sass'),
+    del           = require('del');
+
+sass.compiler     = require('node-sass');
+var Server        = require('karma').Server;
+var browserSync   = require('browser-sync').create();
+var reload        = browserSync.reload;
 
 // Specify the Source files
-var SRC_JS = 'src/js/*.js';
-var SRC_CSS = 'src/css/*.css';
+var SRC_JS        = 'src/js/*.js';
+var SRC_CSS       = 'src/css/*.css';
+var SRC_SCSS      = 'src/scss/*.scss';
 
 // Specify the Destination folders
-var DEST_JS = 'dist/js';
-var DEST_CSS = 'dist/css';
+var DEST_JS       = 'dist/js';
+var DEST_CSS      = 'dist/css';
+var DEST_SCSS     = 'src/css';
 
-// JS TASKS
-// Lint JS
-gulp.task('lint:js', function() {
-    return gulp.src(SRC_JS)
-            .pipe(jshint())
-            .pipe(jshint.reporter('default'))
-            .pipe(jshint.reporter('fail'));
-});
+// BUILD JS
+const build_js = gulp.series(clean_js, lint_js, function(cb) {
+                      gulp.src(SRC_JS)
+                            .pipe(babel({
+                                presets: ['@babel/env']
+                            }))
+                            .pipe(gulp.dest(DEST_JS))
+                            .pipe(uglify({
+                                output: {
+                                    comments: saveLicense
+                                }
+                            }))
+                            .pipe(rename({
+                                suffix: '.min'
+                            }))
+                            .pipe(gulp.dest(DEST_JS));
 
-// Build JS
-gulp.task('build:js', ['clean:js', 'lint:js'], function() {
-    return gulp.src(SRC_JS)
-            .pipe(babel())
-            .pipe(gulp.dest(DEST_JS))
-            .pipe(uglify({preserveComments:'license'}))
-            .pipe(rename({suffix: '.min'}))
-            .pipe(gulp.dest(DEST_JS));
-});
+                      cb();
+                    });
 
-// Build CSS
-gulp.task('build:css', ['clean:css'], function () {
-    return gulp.src(SRC_CSS)
-            .pipe(postcss( [autoprefixer({browsers: ['last 10 versions']})] ))
-            .pipe(cssbeautify({ autosemicolon: true }))
-            .pipe(gulp.dest(DEST_CSS))
-            .pipe(cleanCSS({compatibility: 'ie8'}))
-            .pipe(rename({suffix: '.min'}))
-            .pipe(gulp.dest(DEST_CSS));
-});
+// BUILD CSS
+const build_css = gulp.series(clean_css, function(cb) {
+                      gulp.src(SRC_CSS)
+                            .pipe(postcss( [autoprefixer()] ))
+                            .pipe(cssbeautify({ autosemicolon: true }))
+                            .pipe(gulp.dest(DEST_CSS))
+                            .pipe(cleanCSS({compatibility: 'ie8'}))
+                            .pipe(rename({suffix: '.min'}))
+                            .pipe(gulp.dest(DEST_CSS));
 
-// CLEAN files
-gulp.task('clean:js', function () {
-    return del([DEST_JS]);
-});
+                      cb();
+                    });
 
-gulp.task('clean:css', function () {
-    return del([DEST_CSS]);
-});
+// BUILD SCSS
+const build_scss = gulp.series(function(cb) {
+                      gulp.src(SRC_SCSS)
+                            .pipe(sass({outputStyle:'expanded'}).on('error', sass.logError))
+                            .pipe(gulp.dest(DEST_SCSS));
 
-// WATCH for file changes and rerun the task
-gulp.task('watch', function() {
-    gulp.watch(SRC_JS, ['build:js']);
-    gulp.watch(SRC_CSS, ['build:css']);
-});
+                      cb();
+                    }, build_css);
+
+// BUILD ALL
+const build = gulp.parallel(build_js, build_scss);
+build.description = 'Build the files';
+
+
+// LINT
+const lint = gulp.parallel(lint_js);
+lint.description = 'Link js files';
+
+function lint_js(cb) {
+  gulp.src(SRC_JS)
+      .pipe(jshint({ "esversion": 8 }))
+      .pipe(jshint.reporter('default'));
+
+  cb();
+}
+
+
+// CLEAN
+const clean = gulp.parallel(clean_js, clean_css);
+clean.description = 'Clean the files'
+
+function clean_js(cb) {
+  del.sync([DEST_JS]);
+
+  cb();
+}
+
+function clean_css(cb) {
+  del.sync([DEST_CSS]);
+
+  cb();
+}
+
+
+// WATCH
+const watch = gulp.parallel(watch_all);
+watch.description = 'Watch for changes to all source';
+
+function watch_all(cb) {
+  gulp.watch(SRC_JS, build_js);
+  gulp.watch(SRC_CSS, build_css);
+  gulp.watch(SRC_SCSS, build_scss);
+
+  cb();
+}
+
+// Serve
+const serve = gulp.parallel(serve_all);
+
+function serve_all(cb) {
+  // Serve files from the root of this project
+  browserSync.init({
+      server: {
+          baseDir: ["examples", "dist"],
+          index: "index.html"
+      }
+  });
+
+  gulp.watch(SRC_JS, build_js).on("change", reload);
+  gulp.watch(SRC_CSS, build_css).on("change", reload);
+  gulp.watch(SRC_SCSS, build_scss).on("change", reload);
+
+  cb();
+}
 
 // TEST
-gulp.task('test', function (done) {
-    new karma.Server({
-      configFile: __dirname + '/karma.conf.js',
-      singleRun: true
-    }, function() {
-        done();
-    }).start();
-});
+function test(cb) {
+  new Server({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
+  }, done).start();
 
-// DEFAULT task
-gulp.task('default', function() {
-    gulp.start( 'build:js', 'build:css' );
-});
+  cb();
+}
+
+
+// EXPORT methods
+exports.clean   = clean;
+exports.build   = build;
+exports.lint    = lint;
+exports.watch   = watch;
+exports.test    = test;
+exports.serve   = serve;
+exports.default = exports.serve;

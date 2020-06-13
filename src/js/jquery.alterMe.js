@@ -14,7 +14,7 @@
     "use strict";
     // Default options
     var defaults = {
-            theme: 'default', 
+            theme: 'default',
             alterType: ''
         };
 
@@ -23,7 +23,7 @@
         // Merge user settings with default, recursively
         this.options = $.extend(true, {}, defaults, options);
         this.element = $(element);
-      
+
         // Call initial method
         this.init();
     }
@@ -32,7 +32,7 @@
         init: function () {
             // Apply theme
             this._applyTheme();
-            
+
             this._alterElement();
         },
         _applyTheme: function () {
@@ -45,7 +45,7 @@
                     break;
                 case 'lower':
                      this.element.text(this.element.text().toLowerCase());
-                    break;    
+                    break;
                 default:
                     break;
             }

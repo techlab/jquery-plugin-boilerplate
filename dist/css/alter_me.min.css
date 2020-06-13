@@ -8,4 +8,4 @@
  *
  * Licensed under the terms of the MIT License
  * https://github.com/techlab/jquery-gulp-example/blob/master/LICENSE
- */.theme-default{display:inline-block;border-radius:3px;font-size:15px;padding:5px;color:#555;background-color:#fff;border:1px solid #ccc;-webkit-box-shadow:0 1px 1px rgba(0,0,0,.075) inset;box-shadow:0 1px 1px rgba(0,0,0,.075) inset}.theme-blue{display:inline-block;border-radius:3px;font-size:15px;padding:5px;color:#fff;background-color:#07a;border:1px solid #07a;-webkit-box-shadow:0 1px 1px rgba(0,0,0,.075) inset;box-shadow:0 1px 1px rgba(0,0,0,.075) inset}
+ */.theme-default{display:inline-block;border-radius:3px;font-size:15px;padding:5px;color:#555;background-color:#fff;border:1px solid #ccc;box-shadow:0 1px 1px rgba(0,0,0,.075) inset}.theme-blue{display:inline-block;border-radius:3px;font-size:15px;padding:5px;color:#fff;background-color:#07a;border:1px solid #07a;box-shadow:0 1px 1px rgba(0,0,0,.075) inset}
