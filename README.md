@@ -1,5 +1,5 @@
 # jQuery Gulp Plugin Example
-#### The example repository for jQuery plugin development with Gulp automation
+#### The example repository for the article [jQuery plugin development with Gulp automation](https://medium.com/@dipuraj/jquery-plugin-development-with-gulp-automation-ae5d2c180f85)
 
 [![Build Status](https://travis-ci.org/techlab/jquery-gulp-example.svg?branch=master)](https://travis-ci.org/techlab/jquery-gulp-example)
 [![npm version](https://badge.fury.io/js/jquery-gulp-example.svg)](https://badge.fury.io/js/jquery-gulp-example)
@@ -9,7 +9,7 @@
 
 Articles
 -----
-  + [jQuery plugin development with Gulp automation](http://jsplanet.net/article/1003/jquery-plugin-development-gulp-automation)
+  + [jQuery plugin development with Gulp automation](https://medium.com/@dipuraj/jquery-plugin-development-with-gulp-automation-ae5d2c180f85)
 
 Requirements
 -----
