@@ -28,56 +28,48 @@ var DEST_CSS      = 'dist/css';
 var DEST_SCSS     = 'src/css';
 
 // BUILD JS
-const build_js = gulp.series(clean_js, lint_js, function(cb) {
-                      gulp.src(SRC_JS)
-                            .pipe(babel({
-                                presets: ['@babel/env']
-                            }))
-                            .pipe(gulp.dest(DEST_JS))
-                            .pipe(uglify({
-                                output: {
-                                    comments: saveLicense
-                                }
-                            }))
-                            .pipe(rename({
-                                suffix: '.min'
-                            }))
-                            .pipe(gulp.dest(DEST_JS));
+function build_js(cb) {
+  gulp.src(SRC_JS)
+        .pipe(babel({
+            presets: ['@babel/env']
+        }))
+        .pipe(gulp.dest(DEST_JS))
+        .pipe(uglify({
+            output: {
+                comments: saveLicense
+            }
+        }))
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(gulp.dest(DEST_JS));
 
-                      cb();
-                    });
+  cb();
+}
 
 // BUILD CSS
-const build_css = gulp.series(clean_css, function(cb) {
-                      gulp.src(SRC_CSS)
-                            .pipe(postcss( [autoprefixer()] ))
-                            .pipe(cssbeautify({ autosemicolon: true }))
-                            .pipe(gulp.dest(DEST_CSS))
-                            .pipe(cleanCSS({compatibility: 'ie8'}))
-                            .pipe(rename({suffix: '.min'}))
-                            .pipe(gulp.dest(DEST_CSS));
+function build_css(cb) {
+  gulp.src(SRC_CSS)
+        .pipe(postcss( [autoprefixer()] ))
+        .pipe(cssbeautify({ autosemicolon: true }))
+        .pipe(gulp.dest(DEST_CSS))
+        .pipe(cleanCSS({compatibility: 'ie8'}))
+        .pipe(rename({suffix: '.min'}))
+        .pipe(gulp.dest(DEST_CSS));
 
-                      cb();
-                    });
+  cb();
+}
 
 // BUILD SCSS
-const build_scss = gulp.series(function(cb) {
-                      gulp.src(SRC_SCSS)
-                            .pipe(sass({outputStyle:'expanded'}).on('error', sass.logError))
-                            .pipe(gulp.dest(DEST_SCSS));
+function build_scss(cb) {
+  gulp.src(SRC_SCSS)
+        .pipe(sass({outputStyle:'expanded'}).on('error', sass.logError))
+        .pipe(gulp.dest(DEST_SCSS));
 
-                      cb();
-                    }, build_css);
-
-// BUILD ALL
-const build = gulp.parallel(build_js, build_scss);
-build.description = 'Build the files';
-
+  cb();
+}
 
 // LINT
-const lint = gulp.parallel(lint_js);
-lint.description = 'Link js files';
-
 function lint_js(cb) {
   gulp.src(SRC_JS)
       .pipe(jshint({ "esversion": 8 }))
@@ -86,11 +78,7 @@ function lint_js(cb) {
   cb();
 }
 
-
 // CLEAN
-const clean = gulp.parallel(clean_js, clean_css);
-clean.description = 'Clean the files'
-
 function clean_js(cb) {
   del.sync([DEST_JS]);
 
@@ -103,12 +91,8 @@ function clean_css(cb) {
   cb();
 }
 
-
 // WATCH
-const watch = gulp.parallel(watch_all);
-watch.description = 'Watch for changes to all source';
-
-function watch_all(cb) {
+function watch(cb) {
   gulp.watch(SRC_JS, build_js);
   gulp.watch(SRC_CSS, build_css);
   gulp.watch(SRC_SCSS, build_scss);
@@ -116,10 +100,8 @@ function watch_all(cb) {
   cb();
 }
 
-// Serve
-const serve = gulp.parallel(serve_all);
-
-function serve_all(cb) {
+// SERVE
+function serve(cb) {
   // Serve files from the root of this project
   browserSync.init({
       server: {
@@ -145,12 +127,11 @@ function test(cb) {
   cb();
 }
 
-
 // EXPORT methods
-exports.clean   = clean;
-exports.build   = build;
-exports.lint    = lint;
+exports.clean   = gulp.parallel(clean_js, clean_css);
+exports.build   = gulp.parallel(gulp.series(clean_js, lint_js, build_js), gulp.series(build_scss, build_css, clean_css));
+exports.lint    = lint_js;
 exports.watch   = watch;
 exports.test    = test;
 exports.serve   = serve;
-exports.default = exports.serve;
+exports.default = serve;
