@@ -1,22 +1,22 @@
 {
-  "name": "jquery-gulp-example",
-  "version": "v1.5.0",
-  "description": "The example repository for jQuery plugin development with Gulp automation",
-  "homepage": "http://jsplanet.net/article/1003/jquery-plugin-development-gulp-automation",
-  "license": "MIT",
-  "author": "Dipu Raj <hello@techlaboratory.net>",
+  "name": "jquery-plugin-boilerplate",
+  "version": "v2.0.0",
+  "description": "jQuery plugin development boilerplate with gulp automation",
+  "homepage": "https://medium.com/@dipuraj/jquery-plugin-development-with-gulp-automation-ae5d2c180f85",
+  "license": "",
+  "author": "",
   "repository": {
     "type": "git",
-    "url": "git+https://techlab@github.com/techlab/jquery-gulp-example.git"
+    "url": "git+https://techlab@github.com/techlab/jquery-plugin-boilerplate.git"
   },
   "bugs": {
-    "url": "https://github.com/techlab/jquery-gulp-example/issues"
+    "url": "https://github.com/techlab/jquery-plugin-boilerplate/issues"
   },
   "dependencies": {
     "jquery": ">=1.9.0"
   },
   "scripts": {
-    "start": "gulp serve",
+    "start": "gulp build && gulp serve",
     "watch": "gulp watch",
     "test": "./node_modules/karma/bin/karma start --single-run",
     "build": "gulp build",
@@ -25,8 +25,11 @@
   },
   "keywords": [
     "util",
-    "jquery-plugin",
+    "create-jquery-plugin",
+    "cli",
     "jquery",
+    "jquery-plugin",
+    "jquery-plugin-boilerplate",
     "gulp",
     "example"
   ],
@@ -51,6 +54,7 @@
     "jshint": "^2.11.0",
     "karma": "^4.4.1",
     "karma-chrome-launcher": "^3.1.0",
+    "karma-firefox-launcher": "^1.3.0",
     "karma-jasmine": "^3.1.0",
     "karma-jasmine-jquery": "^0.1.1",
     "karma-spec-reporter": "0.0.32",

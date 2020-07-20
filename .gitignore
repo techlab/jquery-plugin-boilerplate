@@ -1,9 +1,7 @@
-/mpp-sw.txt
-/examples/smartwizard-bs.html
-/examples/Wizard Button.html
 /node_modules/
 /bower_components/
 /vendor/
+/public/
 
 # IDE Files
 #-------------------------
@@ -18,4 +16,3 @@
 *.sublime-workspace
 *.sublime-project
 /nbproject/private/
-/refer.txt
