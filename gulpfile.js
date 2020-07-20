@@ -129,7 +129,7 @@ function test(cb) {
 
 // EXPORT methods
 exports.clean   = gulp.parallel(clean_js, clean_css);
-exports.build   = gulp.parallel(gulp.series(clean_js, lint_js, build_js), gulp.series(build_scss, build_css, clean_css));
+exports.build   = gulp.parallel(gulp.series(clean_js, lint_js, build_js), gulp.series(clean_css, build_scss, build_css));
 exports.lint    = lint_js;
 exports.watch   = watch;
 exports.test    = test;
