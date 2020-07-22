@@ -7,6 +7,14 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/techlab/jquery-plugin-boilerplate/master/LICENSE)
 [![Donate on Paypal](https://img.shields.io/badge/PayPal-dipuraj-blue.svg)](https://www.paypal.me/dipuraj)
 
+create-jquery-plugin
+-----
+You can use [create-jquery-plugin](https://www.npmjs.com/package/create-jquery-plugin) CLI tool to setup the jQuery plugin development setup. Just run
+```bash
+npx create-jquery-plugin
+
+```
+
 Articles
 -----
   + [jQuery plugin development with Gulp automation](https://medium.com/@dipuraj/jquery-plugin-development-with-gulp-automation-ae5d2c180f85)
